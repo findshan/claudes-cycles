@@ -38,7 +38,6 @@
             overflow: hidden;
         }
 
-        /* ── Header ── */
         header {
             display: flex;
             align-items: center;
@@ -47,7 +46,6 @@
             background: var(--panel);
             border-bottom: 1px solid var(--border);
             flex-shrink: 0;
-            z-index: 10;
         }
 
         .logo {
@@ -83,21 +81,18 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
-        /* ── Main layout ── */
         .main {
             flex: 1;
             display: flex;
             overflow: hidden;
         }
 
-        /* ── Sidebar ── */
         .sidebar {
             width: 260px;
             background: var(--panel);
             border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            gap: 0;
             overflow-y: auto;
             flex-shrink: 0;
         }
@@ -116,7 +111,6 @@
             margin-bottom: 10px;
         }
 
-        /* m selector */
         .m-buttons {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -147,7 +141,6 @@
             color: var(--accent0);
         }
 
-        /* Cycle toggles */
         .cycle-rows {
             display: flex;
             flex-direction: column;
@@ -192,12 +185,30 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
-        .toggle-icon {
-            font-size: 14px;
-            margin-left: 2px;
+        /* legend */
+        .legend {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
         }
 
-        /* Stats */
+        .legend-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .legend-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 7px;
+            border-radius: 5px;
+            background: rgba(8, 8, 20, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -217,6 +228,7 @@
             font-family: 'JetBrains Mono', monospace;
             background: linear-gradient(135deg, var(--accent0), var(--accent2));
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
@@ -226,7 +238,6 @@
             margin-top: 2px;
         }
 
-        /* View controls */
         .view-btns {
             display: flex;
             flex-direction: column;
@@ -259,7 +270,6 @@
             color: var(--accent0);
         }
 
-        /* Speed */
         .speed-wrap {
             display: flex;
             align-items: center;
@@ -276,6 +286,7 @@
         input[type=range] {
             flex: 1;
             -webkit-appearance: none;
+            appearance: none;
             height: 4px;
             border-radius: 2px;
             background: var(--border);
@@ -291,7 +302,6 @@
             cursor: pointer;
         }
 
-        /* Play / pause */
         .anim-controls {
             display: flex;
             gap: 8px;
@@ -319,7 +329,6 @@
             color: var(--accent0);
         }
 
-        /* ── Canvas ── */
         .canvas-wrap {
             flex: 1;
             position: relative;
@@ -332,7 +341,6 @@
             height: 100%;
         }
 
-        /* ── HUD ── */
         .hud {
             position: absolute;
             bottom: 16px;
@@ -354,7 +362,6 @@
             margin: 0 4px;
         }
 
-        /* ── Progress bar ── */
         .progress-bar {
             position: absolute;
             top: 0;
@@ -370,20 +377,6 @@
             width: 0%;
             transition: width 0.1s linear;
         }
-
-        /* ── Tooltip ── */
-        .tooltip {
-            position: absolute;
-            background: rgba(15, 15, 30, 0.92);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 8px 12px;
-            font-size: 12px;
-            pointer-events: none;
-            display: none;
-            z-index: 20;
-            font-family: 'JetBrains Mono', monospace;
-        }
     </style>
 </head>
 
@@ -395,11 +388,10 @@
             <div class="title">Claude's Cycles</div>
             <div class="subtitle">Hamiltonian Decomposition — Knuth, Feb 2026</div>
         </div>
-        <div class="badge" id="verified-badge">✓ Verified</div>
+        <div class="badge">✓ Verified</div>
     </header>
 
     <div class="main">
-        <!-- Sidebar -->
         <div class="sidebar">
 
             <div class="section">
@@ -417,21 +409,39 @@
                 <div class="cycle-rows">
                     <div class="cycle-row" data-cycle="0">
                         <div class="cycle-dot" style="background:#38bdf8"></div>
-                        <span class="cycle-label">Cycle 0</span>
+                        <span class="cycle-label">Cycle A</span>
                         <span class="cycle-count" id="c0-count">—</span>
-                        <span class="toggle-icon">●</span>
                     </div>
                     <div class="cycle-row" data-cycle="1">
                         <div class="cycle-dot" style="background:#fb7185"></div>
-                        <span class="cycle-label">Cycle 1</span>
+                        <span class="cycle-label">Cycle B</span>
                         <span class="cycle-count" id="c1-count">—</span>
-                        <span class="toggle-icon">●</span>
                     </div>
                     <div class="cycle-row" data-cycle="2">
                         <div class="cycle-dot" style="background:#a78bfa"></div>
-                        <span class="cycle-label">Cycle 2</span>
+                        <span class="cycle-label">Cycle C</span>
                         <span class="cycle-count" id="c2-count">—</span>
-                        <span class="toggle-icon">●</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-label">Node Label Legend</div>
+                <div class="legend">
+                    <div class="legend-row">
+                        <span class="legend-badge" style="color:#38bdf8">a0</span>
+                        <span style="color:var(--muted)">= Cycle A, node 0 (start)</span>
+                    </div>
+                    <div class="legend-row">
+                        <span class="legend-badge" style="color:#fb7185">b3</span>
+                        <span style="color:var(--muted)">= Cycle B, node 3</span>
+                    </div>
+                    <div class="legend-row">
+                        <span class="legend-badge" style="color:#a78bfa">c17</span>
+                        <span style="color:var(--muted)">= Cycle C, node 17</span>
+                    </div>
+                    <div class="legend-row" style="margin-top:4px;font-size:11px;color:var(--muted)">
+                        Each vertex shows up to 3 labels (one per visible cycle). The origin 000 has a white ring.
                     </div>
                 </div>
             </div>
@@ -482,7 +492,6 @@
 
         </div>
 
-        <!-- Canvas area -->
         <div class="canvas-wrap">
             <div class="progress-bar">
                 <div class="progress-fill" id="progress"></div>
@@ -491,26 +500,20 @@
             <div class="hud">
                 Drag to rotate&nbsp;<span>·</span>&nbsp;Scroll to zoom&nbsp;<span>·</span>&nbsp;Right-drag to pan
             </div>
-            <div class="tooltip" id="tooltip"></div>
         </div>
     </div>
 
     <script>
-        // ─── Data loader ────────────────────────────────────────────────────────────
+        // ─── Constants ───────────────────────────────────────────────────────────────
         const COLORS = [0x38bdf8, 0xfb7185, 0xa78bfa];
         const COLOR_CSS = ['#38bdf8', '#fb7185', '#a78bfa'];
+        const CYCLE_NAME = ['a', 'b', 'c'];
 
-        async function loadData(m) {
-            const r = await fetch(`results/cycles_m${m}.json`);
-            return r.json();
-        }
-
-        // ─── Camera / interaction state ─────────────────────────────────────────────
+        // ─── State ───────────────────────────────────────────────────────────────────
         const state = {
             m: 3, data: null,
             visible: [true, true, true],
             animStep: 0, playing: false, speed: 5,
-            // camera
             theta: 0.5, phi: 0.4, radius: 4,
             panX: 0, panY: 0,
             drag: false, rightDrag: false,
@@ -518,7 +521,7 @@
             view: '3d',
         };
 
-        // ─── Canvas 3D renderer (pure Canvas2D with projection) ─────────────────────
+        // ─── Canvas setup ────────────────────────────────────────────────────────────
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         let W, H;
@@ -532,42 +535,55 @@
             draw();
         }
 
-        // Projection: 3D → 2D
+        // ─── Projection ──────────────────────────────────────────────────────────────
         function project([x, y, z]) {
             if (state.view === '3d') {
-                // Rotate around Y then X
                 const cosT = Math.cos(state.theta), sinT = Math.sin(state.theta);
                 const cosP = Math.cos(state.phi), sinP = Math.sin(state.phi);
                 const rx = x * cosT + z * sinT;
                 const ry = -x * sinT * sinP + y * cosP + z * cosT * sinP;
                 const rz = x * sinT * cosP - y * sinP + z * cosT * cosP;
                 const scale = (W / 2) / (state.radius + rz);
-                return [
-                    W / 2 + (rx + state.panX) * scale,
-                    H / 2 + (-ry + state.panY) * scale,
-                    rz, scale
-                ];
-            } else if (state.view === 'top') {
-                // i → screenX, j → screenY (looking down k-axis)
-                const sc = W * 0.55 / (state.m - 1 || 1);
-                return [W / 2 + (x - (state.m - 1) / 2) * sc + state.panX, H / 2 + (y - (state.m - 1) / 2) * sc + state.panY, 0, sc];
-            } else if (state.view === 'front') {
-                // i → screenX, k → screenY (looking along j)
-                const sc = W * 0.55 / (state.m - 1 || 1);
-                return [W / 2 + (x - (state.m - 1) / 2) * sc + state.panX, H / 2 + (z - (state.m - 1) / 2) * sc + state.panY, 0, sc];
-            } else {
-                // j → screenX, k → screenY (looking along i)
-                const sc = W * 0.55 / (state.m - 1 || 1);
-                return [W / 2 + (y - (state.m - 1) / 2) * sc + state.panX, H / 2 + (z - (state.m - 1) / 2) * sc + state.panY, 0, sc];
+                return [W / 2 + (rx + state.panX) * scale, H / 2 + (-ry + state.panY) * scale, rz, scale];
             }
+            const sc = W * 0.55 / (state.m - 1 || 1);
+            const cx = (state.m - 1) / 2, cy = (state.m - 1) / 2;
+            if (state.view === 'top') return [W / 2 + (x - cx) * sc + state.panX, H / 2 + (y - cy) * sc + state.panY, 0, sc];
+            if (state.view === 'front') return [W / 2 + (x - cx) * sc + state.panX, H / 2 + (z - cy) * sc + state.panY, 0, sc];
+  /* side */                   return [W / 2 + (y - cx) * sc + state.panX, H / 2 + (z - cy) * sc + state.panY, 0, sc];
         }
 
-        function normalizeCoords(v, m) {
-            // center at 0, scale to [-1,1]
+        function norm(v, m) {
             return v.map(x => (x - (m - 1) / 2) / ((m - 1) || 1) * 2);
         }
 
-        let animId = null;
+        // ─── Arrow drawing ───────────────────────────────────────────────────────────
+        function drawArrow(x0, y0, x1, y1, arrowSize) {
+            const dx = x1 - x0, dy = y1 - y0;
+            const len = Math.sqrt(dx * dx + dy * dy);
+            if (len < 1) return;
+            const ux = dx / len, uy = dy / len;
+
+            const tx = x0 + dx * 0.72;
+            const ty = y0 + dy * 0.72;
+
+            // Shaft
+            ctx.beginPath(); ctx.moveTo(x0, y0);
+            ctx.lineTo(tx - ux * arrowSize * 0.5, ty - uy * arrowSize * 0.5); ctx.stroke();
+
+            // Arrowhead
+            const a = Math.PI / 6;
+            ctx.beginPath();
+            ctx.moveTo(tx, ty);
+            ctx.lineTo(tx - ux * arrowSize + uy * Math.tan(a) * arrowSize, ty - uy * arrowSize - ux * Math.tan(a) * arrowSize);
+            ctx.lineTo(tx - ux * arrowSize - uy * Math.tan(a) * arrowSize, ty - uy * arrowSize + ux * Math.tan(a) * arrowSize);
+            ctx.closePath(); ctx.fill();
+
+            // Tail
+            ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(x1, y1); ctx.stroke();
+        }
+
+        // ─── Main draw ───────────────────────────────────────────────────────────────
         let animFrame = 0;
 
         function draw() {
@@ -577,106 +593,153 @@
             const m = state.m;
             const cycles = state.data.cycles;
             const n = m * m * m;
-            const displaySteps = Math.min(state.animStep + 1, n);
+            const steps = Math.min(state.animStep + 1, n);
 
-            // Draw faint grid lines (bounding box)
             drawBBox(m);
 
-            // For each cycle, draw edges up to animStep
+            const lineW = Math.max(1, (2.2 / m) * devicePixelRatio);
+            const arrowS = Math.max(4, (14 / m) * devicePixelRatio);
+            const dotR = Math.max(2.5, (5 / m) * devicePixelRatio);
+
+            // ── Pass 1: arcs with arrows ─────────────────────────────────────────────
             for (let c = 2; c >= 0; c--) {
                 if (!state.visible[c]) continue;
                 const cycle = cycles[c];
                 const col = COLORS[c];
                 const colStr = COLOR_CSS[c];
-                const steps = Math.min(displaySteps, cycle.length);
+                const visSteps = Math.min(steps, cycle.length);
 
-                // Draw edges
-                ctx.lineWidth = Math.max(1, (2.5 / m) * devicePixelRatio);
-                ctx.shadowBlur = 8 * devicePixelRatio;
-                ctx.shadowColor = colStr;
+                ctx.lineWidth = lineW;
 
-                for (let t = 0; t < steps - 1; t++) {
-                    const v0 = normalizeCoords(cycle[t], m);
-                    const v1 = normalizeCoords(cycle[t + 1], m);
-                    const [x0, y0, , s0] = project(v0);
-                    const [x1, y1, ,] = project(v1);
+                for (let t = 0; t < visSteps - 1; t++) {
+                    const isLatest = (t === visSteps - 2);
+                    const alpha = isLatest ? 1.0 : 0.55;
+                    const [x0, y0] = project(norm(cycle[t], m));
+                    const [x1, y1] = project(norm(cycle[t + 1], m));
 
-                    const alpha = t < steps - 2 ? 0.55 : 1.0;
                     ctx.strokeStyle = hexToRgba(col, alpha);
-                    ctx.beginPath();
-                    ctx.moveTo(x0, y0);
-                    ctx.lineTo(x1, y1);
-                    ctx.stroke();
+                    ctx.fillStyle = hexToRgba(col, alpha);
+                    ctx.shadowBlur = isLatest ? 10 * devicePixelRatio : 4 * devicePixelRatio;
+                    ctx.shadowColor = colStr;
+
+                    drawArrow(x0, y0, x1, y1, arrowS);
                 }
 
-                // Draw vertex dots
+                // vertex dots
                 ctx.shadowBlur = 0;
-                const dotR = Math.max(2.5, (5 / m)) * devicePixelRatio;
-                for (let t = 0; t < steps; t++) {
-                    const v = normalizeCoords(cycle[t], m);
-                    const [px, py, ,] = project(v);
-                    const isTip = (t === steps - 1);
+                for (let t = 0; t < visSteps; t++) {
+                    const [px, py] = project(norm(cycle[t], m));
+                    const isTip = (t === visSteps - 1);
                     ctx.beginPath();
-                    ctx.arc(px, py, isTip ? dotR * 2 : dotR, 0, Math.PI * 2);
-                    if (isTip) {
-                        ctx.fillStyle = '#fff';
-                        ctx.shadowBlur = 12 * devicePixelRatio;
-                        ctx.shadowColor = colStr;
-                    } else {
-                        ctx.fillStyle = colStr;
-                        ctx.shadowBlur = 0;
-                    }
+                    ctx.arc(px, py, isTip ? dotR * 2.2 : dotR, 0, Math.PI * 2);
+                    ctx.fillStyle = isTip ? '#fff' : colStr;
+                    ctx.shadowBlur = isTip ? 14 * devicePixelRatio : 0;
+                    ctx.shadowColor = colStr;
                     ctx.fill();
                     ctx.shadowBlur = 0;
                 }
             }
 
-            // Update progress
-            document.getElementById('progress').style.width =
-                (displaySteps / n * 100) + '%';
-            document.getElementById('stat-step').textContent = displaySteps + '/' + n;
+            // ── Pass 2: vertex node labels (a0, b0, c0 …) ───────────────────────────
+            // Font size: scales down for large m
+            const lFont = Math.max(7, Math.round((14 - m * 0.9) * devicePixelRatio));
+            const rowH = lFont * 1.4;
+            // Vertical row offsets for stacking 3 labels (a top, b mid, c bot)
+            const rowOff = [-rowH, 0, rowH];
+
+            // Build map: vertex key → { px, py, labels[3] }
+            // Each label: { text, col }
+            const vmap = new Map();
+            for (let c = 0; c <= 2; c++) {
+                if (!state.visible[c]) continue;
+                const cycle = cycles[c];
+                const visSteps = Math.min(steps, cycle.length);
+                for (let t = 0; t < visSteps; t++) {
+                    const vijk = cycle[t];
+                    const key = vijk.join(',');
+                    if (!vmap.has(key)) {
+                        const [px, py] = project(norm(vijk, m));
+                        vmap.set(key, { px, py, labels: [null, null, null] });
+                    }
+                    vmap.get(key).labels[c] = { text: CYCLE_NAME[c] + t, col: COLOR_CSS[c] };
+                }
+            }
+
+            ctx.font = `600 ${lFont}px Inter, sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.shadowBlur = 0;
+
+            const pad = lFont * 0.30;
+
+            for (const [key, info] of vmap) {
+                const { px, py, labels } = info;
+                const isOrigin = (key === '0,0,0');
+                const baseX = px + dotR * 3.0;   // labels to the right of the dot
+
+                for (let c = 0; c <= 2; c++) {
+                    const lbl = labels[c];
+                    if (!lbl) continue;
+
+                    const lx = baseX;
+                    const ly = py + rowOff[c];
+                    const tw = ctx.measureText(lbl.text).width;
+
+                    // Dark pill background
+                    ctx.fillStyle = 'rgba(5,5,18,0.82)';
+                    ctx.beginPath();
+                    ctx.roundRect(lx - tw / 2 - pad, ly - lFont / 2 - pad * 0.5, tw + pad * 2, lFont + pad, lFont * 0.45);
+                    ctx.fill();
+
+                    // Colored text
+                    ctx.fillStyle = lbl.col;
+                    ctx.fillText(lbl.text, lx, ly);
+                }
+
+                // White ring for origin
+                if (isOrigin) {
+                    ctx.strokeStyle = 'rgba(255,255,255,0.80)';
+                    ctx.lineWidth = 1.8 * devicePixelRatio;
+                    ctx.beginPath();
+                    ctx.arc(px, py, dotR * 3.0, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.lineWidth = lineW;
+                }
+            }
+
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'alphabetic';
+
+            // HUD progress
+            document.getElementById('progress').style.width = (steps / n * 100) + '%';
+            document.getElementById('stat-step').textContent = steps + '/' + n;
         }
 
+        // ─── BBox ────────────────────────────────────────────────────────────────────
         function drawBBox(m) {
             const corners = [];
-            for (let i = 0; i <= 1; i++)
-                for (let j = 0; j <= 1; j++)
-                    for (let k = 0; k <= 1; k++)
-                        corners.push(normalizeCoords([i * (m - 1), j * (m - 1), k * (m - 1)], m));
+            for (let i = 0; i <= 1; i++) for (let j = 0; j <= 1; j++) for (let k = 0; k <= 1; k++)
+                corners.push(norm([i * (m - 1), j * (m - 1), k * (m - 1)], m));
 
-            const edges = [
-                [0, 1], [0, 2], [0, 4],
-                [7, 6], [7, 5], [7, 3],
-                [1, 3], [1, 5], [2, 3], [2, 6], [4, 5], [4, 6],
-            ];
-
+            const edges = [[0, 1], [0, 2], [0, 4], [7, 6], [7, 5], [7, 3], [1, 3], [1, 5], [2, 3], [2, 6], [4, 5], [4, 6]];
             ctx.strokeStyle = 'rgba(255,255,255,0.07)';
             ctx.lineWidth = 1 * devicePixelRatio;
             ctx.shadowBlur = 0;
             for (const [a, b] of edges) {
                 const [x0, y0] = project(corners[a]);
                 const [x1, y1] = project(corners[b]);
-                ctx.beginPath();
-                ctx.moveTo(x0, y0);
-                ctx.lineTo(x1, y1);
-                ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
             }
-
-            // Axis labels
-            const labels = [['i', [1, 0, 0]], ['j', [0, 1, 0]], ['k', [0, 0, 1]]];
             ctx.font = `${11 * devicePixelRatio}px Inter, sans-serif`;
-            ctx.fillStyle = 'rgba(255,255,255,0.35)';
-            for (const [lbl, v] of labels) {
-                const nc = normalizeCoords(v.map(x => x * (m - 1)), m);
-                const [px, py] = project(nc);
+            ctx.fillStyle = 'rgba(255,255,255,0.30)';
+            for (const [lbl, v] of [['i', [1, 0, 0]], ['j', [0, 1, 0]], ['k', [0, 0, 1]]]) {
+                const [px, py] = project(norm(v.map(x => x * (m - 1)), m));
                 ctx.fillText(lbl, px + 5 * devicePixelRatio, py);
             }
         }
 
         function hexToRgba(hex, a) {
-            const r = (hex >> 16) & 0xff;
-            const g = (hex >> 8) & 0xff;
-            const b = hex & 0xff;
+            const r = (hex >> 16) & 0xff, g = (hex >> 8) & 0xff, b = hex & 0xff;
             return `rgba(${r},${g},${b},${a})`;
         }
 
@@ -685,9 +748,8 @@
             if (!state.playing) return;
             const n = state.m ** 3;
             animFrame++;
-            const stepsPerFrame = Math.ceil(state.speed / 5);
             if (animFrame % Math.max(1, Math.round(6 / state.speed)) === 0) {
-                state.animStep = Math.min(state.animStep + stepsPerFrame, n);
+                state.animStep = Math.min(state.animStep + Math.ceil(state.speed / 5), n);
             }
             draw();
             if (state.animStep >= n) {
@@ -698,7 +760,7 @@
             requestAnimationFrame(animate);
         }
 
-        // ─── UI event wiring ─────────────────────────────────────────────────────────
+        // ─── UI wiring ───────────────────────────────────────────────────────────────
         document.querySelectorAll('.m-btn').forEach(btn => {
             btn.addEventListener('click', async () => {
                 document.querySelectorAll('.m-btn').forEach(b => b.classList.remove('active'));
@@ -729,8 +791,7 @@
         });
 
         document.getElementById('btn-reset').addEventListener('click', () => {
-            state.animStep = 0;
-            state.playing = false;
+            state.animStep = 0; state.playing = false;
             document.getElementById('btn-play').textContent = '▶ Play';
             draw();
         });
@@ -740,12 +801,10 @@
             document.getElementById('speed-label').textContent = `Speed ×${Math.round(state.speed / 5 * 10) / 10 || 1}`;
         });
 
-        // Camera presets
         const viewBtns = { '3d': 'btn-3d', 'top': 'btn-top', 'front': 'btn-front', 'side': 'btn-side' };
         Object.entries(viewBtns).forEach(([v, id]) => {
             document.getElementById(id).addEventListener('click', () => {
-                state.view = v;
-                state.panX = state.panY = 0;
+                state.view = v; state.panX = state.panY = 0;
                 if (v === '3d') { state.theta = 0.5; state.phi = 0.4; state.radius = 4; }
                 document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
                 document.getElementById(id).classList.add('active');
@@ -753,7 +812,6 @@
             });
         });
 
-        // Mouse drag
         canvas.addEventListener('mousedown', e => {
             if (e.button === 2) { e.preventDefault(); state.rightDrag = true; }
             else state.drag = true;
@@ -761,15 +819,13 @@
         });
         canvas.addEventListener('contextmenu', e => e.preventDefault());
         window.addEventListener('mousemove', e => {
-            const dx = e.clientX - state.lastX;
-            const dy = e.clientY - state.lastY;
+            const dx = e.clientX - state.lastX, dy = e.clientY - state.lastY;
             state.lastX = e.clientX; state.lastY = e.clientY;
             if (state.drag && state.view === '3d') {
                 state.theta -= dx * 0.008;
-                state.phi += dy * 0.008;
-                state.phi = Math.max(-Math.PI / 2 + 0.05, Math.min(Math.PI / 2 - 0.05, state.phi));
+                state.phi = Math.max(-Math.PI / 2 + 0.05, Math.min(Math.PI / 2 - 0.05, state.phi + dy * 0.008));
                 draw();
-            } else if ((state.drag || state.rightDrag)) {
+            } else if (state.drag || state.rightDrag) {
                 state.panX += dx * devicePixelRatio;
                 state.panY += dy * devicePixelRatio;
                 draw();
@@ -782,19 +838,17 @@
             draw();
         }, { passive: false });
 
-        // Load data
         async function loadM(m) {
-            state.data = await loadData(m);
-            state.animStep = state.data.cycles[0].length; // show full by default
+            const r = await fetch(`results/cycles_m${m}.json`);
+            state.data = await r.json();
+            state.animStep = state.data.cycles[0].length;   // show full by default
             state.visible = [true, true, true];
             document.querySelectorAll('.cycle-row').forEach(r => r.classList.remove('off'));
-
-            // Update stats
             document.getElementById('stat-m').textContent = m;
             document.getElementById('stat-verts').textContent = state.data.num_vertices;
             document.getElementById('stat-arcs').textContent = state.data.total_arcs;
-            ['c0-count', 'c1-count', 'c2-count'].forEach((id, idx) => {
-                document.getElementById(id).textContent = state.data.cycles[idx].length + ' v';
+            ['c0-count', 'c1-count', 'c2-count'].forEach((id, i) => {
+                document.getElementById(id).textContent = state.data.cycles[i].length + ' v';
             });
             draw();
         }
